@@ -1,5 +1,6 @@
 package com.connekt.SpringSecurity_V_01.Config;
 
+import com.connekt.SpringSecurity_V_01.Service.LogoutService;
 import com.connekt.SpringSecurity_V_01.Service.MyUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,6 +29,8 @@ public class SecurityConfig {
     private final JwtFilterChain jwtFilterChain;
 
     private final MyUserDetailsService myUserDetailsService;
+
+    private final LogoutService logoutService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -50,6 +54,14 @@ public class SecurityConfig {
                                 .hasAnyRole(ADMIN.name())
                                 .anyRequest()
                                 .authenticated()
+                )
+                .logout(
+                        logout -> logout
+                                .logoutUrl("/api/v1/logout")
+                                .addLogoutHandler(logoutService)
+                                .logoutSuccessHandler(
+                                        (request, response, authentication) -> SecurityContextHolder.clearContext()
+                                )
                 );
 
         return http.build();
