@@ -1,5 +1,6 @@
 package com.connekt.SpringSecurity_V_01.Config;
 
+import com.connekt.SpringSecurity_V_01.Repo.TokenRepo;
 import com.connekt.SpringSecurity_V_01.Service.JwtService;
 import com.connekt.SpringSecurity_V_01.Service.MyUserDetailsService;
 import jakarta.servlet.FilterChain;
@@ -23,6 +24,8 @@ public class JwtFilterChain extends OncePerRequestFilter {
     private final JwtService jwtService;
 
     private final MyUserDetailsService myUserDetailsService;
+
+    private final TokenRepo tokenRepo;
 
     @Override
     protected void doFilterInternal(
@@ -48,7 +51,11 @@ public class JwtFilterChain extends OncePerRequestFilter {
 
             UserDetails userDetails = myUserDetailsService.loadUserByUsername(userEmail);
 
-            if ( jwtService.isTokenValid(jwtToken, userDetails) ) {
+            boolean isTokenValid = tokenRepo.findByToken(jwtToken)
+                    .map(token -> !token.isExpired() && !token.isRevoked())
+                    .orElse(false);
+
+            if ( jwtService.isTokenValid(jwtToken, userDetails) && isTokenValid ) {
 
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
