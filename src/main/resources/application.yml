@@ -1,0 +1,33 @@
+# Configuration for Tomcat Server
+
+server:
+  port: 7777
+
+# Configuration for JDBC Postgresql
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/spring_security
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+
+# Configuration For Hibernate Postgresql
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+# Values for JwtTokens
+
+application:
+  security:
+    jwt:
+      secretKey: 1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM
+      accessToken:
+        expiration: 600000
