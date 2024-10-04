@@ -83,10 +83,13 @@ public class AuthService {
 
             String accessToken = jwtService.generateToken(savedUser);
 
+            String refreshToken = jwtService.generateRefreshToken(savedUser);
+
             saveToken(accessToken, savedUser);
 
             return AuthenticationResponse.builder()
                     .accessToken(accessToken)
+                    .refreshToken(refreshToken)
                     .build();
 
         }
@@ -110,12 +113,15 @@ public class AuthService {
 
         String accessToken = jwtService.generateToken(user);
 
+        String refreshToken = jwtService.generateRefreshToken(user);
+
         revokeUserTokens(user);
 
         saveToken(accessToken, user);
 
         return AuthenticationResponse.builder()
                 .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .build();
 
     }

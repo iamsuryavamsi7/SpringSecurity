@@ -31,3 +31,5 @@ application:
       secretKey: 1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM
       accessToken:
         expiration: 600000
+      refreshToken:
+        expiration: 604800000
