@@ -1,13 +1,17 @@
 package com.connekt.SpringSecurity_V_01.Controller;
 
+import com.connekt.SpringSecurity_V_01.Model.GetUserNameRequest;
+import com.connekt.SpringSecurity_V_01.Service.JwtService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/secured-end-point-user")
 public class UserController {
+
+    private final JwtService jwtService;
 
     @GetMapping("/greet")
     public ResponseEntity<String> greet(){
@@ -18,10 +22,12 @@ public class UserController {
 
     }
 
-    @GetMapping("/get-username")
-    public String getUsername(){
+    @PostMapping("/get-username")
+    public ResponseEntity<String> getUsername(@RequestBody GetUserNameRequest request){
 
-        return "";
+        String userName = jwtService.extractUserEmail(request.getJwtToken());
+
+        return ResponseEntity.ok(userName);
 
     }
 
